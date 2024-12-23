@@ -5,13 +5,11 @@ import { appwriteConfig } from "@/lib/appwrite/config";
 import { Query, ID } from "node-appwrite";
 import { parseStringify } from "@/lib/utils";
 import { cookies } from "next/headers";
+import { avatarPlaceholderUrl } from "@/constants";
 import { redirect } from "next/navigation";
 
 const getUserByEmail = async (email: string) => {
   const { databases } = await createAdminClient();
-  // Log the databaseId and usersCollectionId to ensure they are correctly set
-  console.log("Database ID:", appwriteConfig.databaseId);
-  console.log("Users Collection ID:", appwriteConfig.usersCollectionId);
 
   const result = await databases.listDocuments(
     appwriteConfig.databaseId,
@@ -61,7 +59,7 @@ export const createAccount = async ({
       {
         fullName,
         email,
-        avatar: "/assets/icons/avatar.jpg",
+        avatar: avatarPlaceholderUrl,
         accountId,
       },
     );
