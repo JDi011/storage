@@ -59,7 +59,7 @@ export const createAccount = async ({
       {
         fullName,
         email,
-        avatar: avatarPlaceholderUrl,
+        avatar: "/assets/icons/avatar.jpg",
         accountId,
       },
     );
