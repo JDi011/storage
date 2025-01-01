@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { createAccount } from "@/lib/actions/user.actions";
+import { createAccount, signInUser } from "@/lib/actions/user.actions";
 import OtpModal from "@/components/OTPModal";
 
 type FormType = "sign-in" | "sign-up";
@@ -51,10 +51,13 @@ const AuthForm = ({ type }: { type: FormType }) => {
     setErrorMessage("");
 
     try {
-      const user = await createAccount({
-        fullName: values.fullName || "",
-        email: values.email,
-      });
+      const user =
+        type === "sign-up"
+          ? await createAccount({
+              fullName: values.fullName || "",
+              email: values.email,
+            })
+          : await signInUser({ email: values.email });
 
       setAccountId(user.accountId);
     } catch {
@@ -67,29 +70,29 @@ const AuthForm = ({ type }: { type: FormType }) => {
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="auth-form">
-          <h1 className="form-title">
+        <form onSubmit={form.handleSubmit(onSubmit)} className='auth-form'>
+          <h1 className='form-title'>
             {type === "sign-in" ? "Sign In" : "Sign Up"}
           </h1>
           {type === "sign-up" && (
             <FormField
               control={form.control}
-              name="fullName"
+              name='fullName'
               render={({ field }) => (
                 <FormItem>
-                  <div className="shad-form-item">
-                    <FormLabel className="shad-form-label">Full Name</FormLabel>
+                  <div className='shad-form-item'>
+                    <FormLabel className='shad-form-label'>Full Name</FormLabel>
 
                     <FormControl>
                       <Input
-                        placeholder="Enter your full name"
-                        className="shad-input"
+                        placeholder='Enter your full name'
+                        className='shad-input'
                         {...field}
                       />
                     </FormControl>
                   </div>
 
-                  <FormMessage className="shad-form-message" />
+                  <FormMessage className='shad-form-message' />
                 </FormItem>
               )}
             />
@@ -97,55 +100,55 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
           <FormField
             control={form.control}
-            name="email"
+            name='email'
             render={({ field }) => (
               <FormItem>
-                <div className="shad-form-item">
-                  <FormLabel className="shad-form-label">Email</FormLabel>
+                <div className='shad-form-item'>
+                  <FormLabel className='shad-form-label'>Email</FormLabel>
 
                   <FormControl>
                     <Input
-                      placeholder="Enter your email"
-                      className="shad-input"
+                      placeholder='Enter your email'
+                      className='shad-input'
                       {...field}
                     />
                   </FormControl>
                 </div>
 
-                <FormMessage className="shad-form-message" />
+                <FormMessage className='shad-form-message' />
               </FormItem>
             )}
           />
 
           <Button
-            type="submit"
-            className="form-submit-button"
+            type='submit'
+            className='form-submit-button'
             disabled={isLoading}
           >
             {type === "sign-in" ? "Sign In" : "Sign Up"}
 
             {isLoading && (
               <Image
-                src="/assets/icons/loader.svg"
-                alt="loader"
+                src='/assets/icons/loader.svg'
+                alt='loader'
                 width={24}
                 height={24}
-                className="ml-2 animate-spin"
+                className='ml-2 animate-spin'
               />
             )}
           </Button>
 
-          {errorMessage && <p className="error-message">*{errorMessage}</p>}
+          {errorMessage && <p className='error-message'>*{errorMessage}</p>}
 
-          <div className="body-2 flex justify-center">
-            <p className="text-light-100">
+          <div className='body-2 flex justify-center'>
+            <p className='text-light-100'>
               {type === "sign-in"
                 ? "Don't have an account?"
                 : "Already have an account?"}
             </p>
             <Link
               href={type === "sign-in" ? "/sign-up" : "/sign-in"}
-              className="ml-1 font-medium text-brand"
+              className='ml-1 font-medium text-brand'
             >
               {" "}
               {type === "sign-in" ? "Sign Up" : "Sign In"}
