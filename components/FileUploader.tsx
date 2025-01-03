@@ -7,6 +7,7 @@ import { cn, convertFileToUrl, getFileType } from "@/lib/utils";
 import Image from "next/image";
 import { get } from "http";
 import Thumbnail from "./ui/Thumbnail";
+import { handleClientScriptLoad } from "next/script";
 
 interface Props {
   owenerId: string;
@@ -17,12 +18,16 @@ interface Props {
 const FileUploader = ({ owenerId, accountId, className }: Props) => {
   const [files, setFiles] = useState<File[]>([]);
 
-  const onDrop = useCallback(async (acceptedFiles: FIle[]) => {
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
     setFiles(acceptedFiles);
     // Do something with the files
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
+  const handleRemoveFile = (e: React.MouseEvent<HTMLImageElement, MouseEvent>, fileName: string) => {
+    e.stopPropagation();
+    setFiles((prevFiles) => prevFiles.filter((file) => file.name !== fileName));
+  };
   return (
     <div {...getRootProps()} className='cursor-pointer'>
       <input {...getInputProps()} />
@@ -37,23 +42,39 @@ const FileUploader = ({ owenerId, accountId, className }: Props) => {
       </Button>
       {files.length > 0 && (
         <ul className='uploader-preview-list'>
-          <h4 className="h4 text-light-100">Uploading</h4>
+          <h4 className='h4 text-light-100'>Uploading</h4>
           {files.map((file, index) => {
-            const {type, extension} = getFileType(file.name);
-            return(
-              <li key={`${file.name}-${index}`} className='uploader-preview-item'>
-                <div className="flex items-center gap-3">
-                  <Thumbnail 
-                  type={type}
-                  extension={extension}
-                  url={convertFileToUrl(file)}
+            const { type, extension } = getFileType(file.name);
+            return (
+              <li
+                key={`${file.name}-${index}`}
+                className='uploader-preview-item'
+              >
+                <div className='flex items-center gap-3'>
+                  <Thumbnail
+                    type={type}
+                    extension={extension}
+                    url={convertFileToUrl(file)}
                   />
-                  <div>
-                    
+                  <div className='preview-item-name'>
+                    {file.name}
+                    <Image
+                      src='/assets/icons/file-loader.gif'
+                      alt='loader'
+                      width={80}
+                      height={26}
+                    />
                   </div>
                 </div>
+                <Image
+                  src='/assets/icons/remove.svg'
+                  alt='remnove'
+                  width={24}
+                  height={24}
+                  onClick={(e) => handleRemoveFile(e, file.name)}
+                />
               </li>
-            )
+            );
           })}
         </ul>
       )}
