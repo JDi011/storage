@@ -14,6 +14,12 @@ const Page = async ({ searchParams, params }: SearchParamProps) => {
 
   const files = await getFiles({ types, searchText, sort });
 
+  // Calculate total size
+  const totalSize = files.documents.reduce((acc, file) => acc + file.size, 0);
+
+  // Format size to MB
+  const formatSize = (size: number) => (size / (1024 * 1024)).toFixed(2);
+
   return (
     <div className='page-container'>
       <section className='w-full'>
@@ -21,7 +27,7 @@ const Page = async ({ searchParams, params }: SearchParamProps) => {
 
         <div className='total-size-section'>
           <p className='body-1'>
-            Total: <span className='h5'>0 MB</span>
+            Total: <span className='h5'>{formatSize(totalSize)} MB</span>
           </p>
 
           <div className='sort-container'>
@@ -40,7 +46,7 @@ const Page = async ({ searchParams, params }: SearchParamProps) => {
           ))}
         </section>
       ) : (
-        <p className='empty-list'>No files uploaded</p>
+        <p>No files found</p>
       )}
     </div>
   );
