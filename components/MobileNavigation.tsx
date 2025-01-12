@@ -19,13 +19,18 @@ import FileUploader from "./FileUploader";
 import { signOutUser } from "@/lib/actions/user.actions";
 
 interface Props {
-  ownerId: string;
+  $id: string;
   accountId: string;
   fullName: string;
   email: string;
 }
 
-const MobileNavigation = ({ ownerId, accountId, fullName, email }: Props) => {
+const MobileNavigation = ({
+  $id: ownerId,
+  accountId,
+  fullName,
+  email,
+}: Props) => {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
@@ -62,45 +67,51 @@ const MobileNavigation = ({ ownerId, accountId, fullName, email }: Props) => {
               <p className='subtite-2 capitalize'>{fullName}</p>
               <p className='caption'>{email}</p>
             </div>
-            <Separator className="mb-4 bg-light-200/20"/>
+            <Separator className='mb-4 bg-light-200/20' />
           </SheetTitle>
-          <nav className="mobile-nav">
-            <ul className="mobile-nav-list">
-            {navItems.map(({ url, name, icon }) => (
-              <Link href={url} key={name} className='lg:w-full'>
-                <li
-                  className={cn(
-                    "mobile-nav-item",
-                    pathname === url && "shad-active"
-                  )}
-                >
-                  <Image
+          <nav className='mobile-nav'>
+            <ul className='mobile-nav-list'>
+              {navItems.map(({ url, name, icon }) => (
+                <Link href={url} key={name} className='lg:w-full'>
+                  <li
                     className={cn(
-                      "nav-icon",
-                      pathname === url && "nav-icon-active"
+                      "mobile-nav-item",
+                      pathname === url && "shad-active"
                     )}
-                    src={icon}
-                    alt={name}
-                    width={24}
-                    height={24}
-                  />
-                  <p>{name}</p>
-                </li>
-              </Link>
-            ))}
+                  >
+                    <Image
+                      className={cn(
+                        "nav-icon",
+                        pathname === url && "nav-icon-active"
+                      )}
+                      src={icon}
+                      alt={name}
+                      width={24}
+                      height={24}
+                    />
+                    <p>{name}</p>
+                  </li>
+                </Link>
+              ))}
             </ul>
           </nav>
-          <Separator className="my-5 bg-light-200/20"/>
-          <div className="flex flex-col justify-between gap-5 pb-5">
-            <FileUploader />
+          <Separator className='my-5 bg-light-200/20' />
+          <div className='flex flex-col justify-between gap-5 pb-5'>
+            <FileUploader ownerId={ownerId} accountId={accountId} />
 
-            <Button type='submit' className="mobile-sign-out-button" onClick={async () => await signOutUser()}>
-              <Image src="/assets/icons/logout.svg" alt="logo" width={24} height={24}/>
-              <p>
-                Sign out
-              </p>
+            <Button
+              type='submit'
+              className='mobile-sign-out-button'
+              onClick={async () => await signOutUser()}
+            >
+              <Image
+                src='/assets/icons/logout.svg'
+                alt='logo'
+                width={24}
+                height={24}
+              />
+              <p>Sign out</p>
             </Button>
-
           </div>
         </SheetContent>
       </Sheet>
